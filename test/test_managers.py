@@ -10,3 +10,9 @@ def test_docker_manager():
     manager.reset()
     sleep(15)
     manager.stop()
+def test_docker_manager_step():
+    manager = DockerManager()
+    manager.start()
+    sleep(15)
+    manager.step()
+    print('test')
