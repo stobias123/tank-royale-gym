@@ -1,0 +1,9 @@
+services:
+  frontend:
+    image: gcr.io/stobias-dev/tank-royal-frontend:latest
+    ports:
+      - "3000:80"
+  server:
+    image: gcr.io/stobias-dev/tank-royal-server:0.17.1
+    ports:
+      - "7654:7654"
