@@ -1,8 +1,10 @@
+import logging
+import sys
 from time import sleep
 
 from envs.docker_env import DockerRobocodeEnv
 
-
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 def test_env():
     testenv = DockerRobocodeEnv()
     testenv.reset()
