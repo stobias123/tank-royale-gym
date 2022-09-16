@@ -24,7 +24,8 @@ class DockerRobocodeEnv(gym.Env):
         # Env Setup - WASD to integer.
         self.HEIGHT: int = 600
         self.WIDTH: int = 800
-        self.action_space = spaces.Discrete(16)
+        self.render_mode = "rgb_array"
+        self.action_space = spaces.Discrete(5)
         self.observation_space = spaces.Box(low=0, high=255,
                                             shape=(self.HEIGHT, self.WIDTH, 3), dtype=numpy.uint8)
         self.robocode_manager: DockerManager = DockerManager()
@@ -38,7 +39,7 @@ class DockerRobocodeEnv(gym.Env):
         self.controller.start_thread()
 
         # Start up our bot agent
-        self.bot_agent = BasicBot(ws_address)
+        self.bot_agent = DriveAndScanBot(ws_address)
         self.enemy_agent = FireBot(ws_address)
 
         # Renderer
@@ -66,7 +67,7 @@ class DockerRobocodeEnv(gym.Env):
         self.bot_agent.action_to_intent(action)
         self.controller.step()
         sleep((tank_royal_manager.manager.game_types.STANDARD.turnTimeout / 1000000) + .01)
-        return self._get_frame(), self._get_reward(), self._is_done(), {}
+        return self._get_frame(), self._get_reward(), self._is_done(), {}, {}
 
     def _get_reward(self):
         pass
