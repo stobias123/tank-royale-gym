@@ -9,7 +9,7 @@ import numpy
 from tank_royal_manager.manager.controller_manager import ControllerManager
 from tank_royal_manager.robocode_event_models import TickEventForObserver
 
-from lib.bot_api.bots import DriveAndScanBot, FireBot, BasicBot
+from lib.bot_api.bots import DriveAndScanBot, FireBot, BasicBot, AgentBot
 from lib.dependency_managers.docker_manager import DockerManager
 from lib.render.basic_rgb import BasicRGB
 
@@ -39,14 +39,14 @@ class DockerRobocodeEnv(gym.Env):
         self.controller.start_thread()
 
         # Start up our bot agent
-        self.bot_agent = DriveAndScanBot(ws_address)
+        self.bot_agent = AgentBot(ws_address)
         self.enemy_agent = FireBot(ws_address)
 
         # Renderer
         self.renderer = BasicRGB(map_height=self.HEIGHT, map_width=self.WIDTH)
 
     def _get_frame(self):
-        return self.renderer.draw_tick(tick_event=self.bot_agent.last_tick)
+        return self.renderer.draw_tick(tick_event=self.bot_agent.last_tick, bots = self.bot_agent.bots)
 
     def _get_reward(self, prev_state: TickEventForObserver, next_state: TickEventForObserver):
         for event in prev_state:
@@ -54,20 +54,20 @@ class DockerRobocodeEnv(gym.Env):
 
 
     def _is_done(self):
-        pass
+        return self.controller.game_over
 
     def reset(self):
         self.robocode_manager.reset()
         sleep(1)
         ## step to get 1 obs
-        # obs, reward, done, truncated, info = self.step(0)
+        return self._get_frame(), {}
 
     def step(self, action):
         # Send our action
         self.bot_agent.action_to_intent(action)
         self.controller.step()
         sleep((tank_royal_manager.manager.game_types.STANDARD.turnTimeout / 1000000) + .01)
-        return self._get_frame(), self._get_reward(), self._is_done(), {}, {}
+        return self._get_frame(), self._get_reward(), self._is_done(), self._is_done(), {}
 
     def _get_reward(self):
         pass

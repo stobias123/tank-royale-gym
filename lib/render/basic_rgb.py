@@ -25,23 +25,21 @@ class BasicRGB:
         color = (255, 0, 0)
         return cv.circle(img, (int(event.x), int(event.y)), BasicRGB.tank_bounding_radius, color, -1)
 
-    def draw_self(self,img, event: BotState):
-        color = (0,255,0)
+    def draw_self(self, img, event: BotState):
+        color = (0, 255, 0)
         return cv.circle(img, (int(event.x), int(event.y)), BasicRGB.tank_bounding_radius, color, -1)
 
     def draw_scanned_bullet(self, img, event: BulletState):
         color = (0, 0, 255)
         return cv.circle(img, (int(event.x), int(event.y)), BasicRGB.tank_bounding_radius, color, -1)
 
-    def draw_tick(self, tick_event: TickEventForBot):
+    def draw_tick(self, tick_event: TickEventForBot, bots):
         img_shape = (self.map_height, self.map_width, 3)
         img = np.zeros(img_shape, np.uint8)
-        img = self.draw_self(img,tick_event.botState)
-
         if tick_event is not None:
-            for event in tick_event.events:
-                if 'type' in event and event['type'] == "ScannedBotEvent":
-                    img = self.draw_scanned_bot(img, ScannedBotEvent(**event))
+            img = self.draw_self(img, tick_event.botState)
+            for idx, bot in bots.items():
+                img = self.draw_scanned_bot(img, bot)
             for bullet in tick_event.bulletStates:
                 img = self.draw_scanned_bullet(img, bullet)
         return img
