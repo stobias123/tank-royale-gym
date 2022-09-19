@@ -33,12 +33,11 @@ class FireBot(BasicBot):
             keys.sort()
             idx = keys[0]
             bearing = self.bearing_to(self.bots[idx].x, self.bots[idx].y)
+            logging.info(f"bearing: {bearing}")
             self.botManager.intent.turnRate = bearing
         else:
-            self.botManager.intent.turnRate=1
+            self.botManager.intent.turnRate = 1
         self.botManager.conn.send(self.botManager.intent.json())
-
-
 
 
 class ScanAndFireBot(BaseBotMessageHandler):
@@ -68,14 +67,16 @@ class DriveAndScanBot(BasicBot):
         if self.botManager.intent is None:
             self.botManager.conn.send(BotIntent().json)
             return
-        self.botManager.intent.radarTurnRate=1
+        self.botManager.intent.radarTurnRate = 1
         self.botManager.conn.send(self.botManager.intent.json())
 
+
 class AgentBot(BasicBot):
-    def __init__(self, ws_address: str = 'ws://localhost:7654', bot_name: str = 'drive_and_scan'):
+    def __init__(self, ws_address: str = 'ws://localhost:7654', bot_name: str = 'agentBot'):
         super().__init__(ws_address, bot_name)
         self.botManager = CustomBotManager(self.handle_tick, ws_address, bot_name)
         self.botManager.start_thread()
+
     def handle_tick(self, tick: TickEventForBot):
         self.find_bots(tick)
         self.last_tick = tick

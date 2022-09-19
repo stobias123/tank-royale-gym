@@ -15,7 +15,7 @@ class DockerManager(RobocodeManager):
     def __init__(self, port_number: int = 7654, conn_pw: str ='abc123'):
         self.docker_client = docker.from_env()
         self.port_number = port_number
-        self.robocode_image = 'gcr.io/stobias-dev/tank-royal-server:latest-debug'
+        self.robocode_image = 'gcr.io/stobias-dev/tank-royal-server:latest'
         self.container = None
         self.conn_pw = conn_pw
         self.container_name = 'tank-royal-server'

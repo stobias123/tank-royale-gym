@@ -22,5 +22,5 @@ if __name__ == "__main__":
     sleep(5)
     for i in range(0, 500):
         action = env.action_space.sample()
-        observation, reward, terminated, trunc, info = env.step(action)
+        next_state, reward, terminated, trunc, info = env.step(action)
     env.close()
