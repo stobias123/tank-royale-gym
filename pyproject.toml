@@ -22,8 +22,4 @@ classifiers = [
 "Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
 
 [tool.setuptools]
-packages = [
-  { include="envs", from="." },
-  { include="lib", from="." },
-  { include="test", from="." },
-]
+packages = [ "envs", "lib", "test"]
