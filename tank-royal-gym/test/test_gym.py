@@ -2,6 +2,9 @@ import logging
 import sys
 from time import sleep
 
+import gym
+from gym import wrappers
+
 from envs.docker_env import DockerRobocodeEnv
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)

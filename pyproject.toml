@@ -12,12 +12,14 @@ description = "Tank Royal Openai Gym"
 readme = "README.md"
 license = { file="LICENSE" }
 requires-python = ">=3.9"
+packages = [
+  { include="tank-royal-gym", from="." },
+]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-
 [project.urls]
 "Homepage" = "https://github.com/pypa/sampleproject"
 "Bug Tracker" = "https://github.com/pypa/sampleproject/issues"

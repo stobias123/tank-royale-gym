@@ -5,5 +5,6 @@ services:
       - "3000:80"
   server:
     image: gcr.io/stobias-dev/tank-royal-server:0.17.1
+    container_name: tank-royal-server
     ports:
       - "7654:7654"
