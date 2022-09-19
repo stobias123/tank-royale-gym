@@ -9,9 +9,9 @@ import numpy
 from tank_royal_manager.manager.controller_manager import ControllerManager
 from tank_royal_manager.robocode_event_models import TickEventForObserver, TickEventForBot, MessageType
 
-from .lib.bot_api.bots import DriveAndScanBot, FireBot, BasicBot, AgentBot
-from .lib.dependency_managers.docker_manager import DockerManager
-from .lib.render.basic_rgb import BasicRGB
+from tank_royal_gym.lib.bot_api.bots import DriveAndScanBot, FireBot, BasicBot, AgentBot
+from tank_royal_gym.lib.dependency_managers.docker_manager import DockerManager
+from tank_royal_gym.lib.render.basic_rgb import BasicRGB
 
 
 class DockerRobocodeEnv(gym.Env):
