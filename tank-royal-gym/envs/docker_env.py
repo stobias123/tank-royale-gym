@@ -1,4 +1,5 @@
 import logging
+import random
 import threading
 from time import sleep
 
@@ -29,8 +30,9 @@ class DockerRobocodeEnv(gym.Env):
         self.action_space = spaces.Discrete(16)
         self.observation_space = spaces.Box(low=0, high=255,
                                             shape=(self.HEIGHT, self.WIDTH, 3), dtype=numpy.uint8)
-        self.robocode_manager: DockerManager = DockerManager()
-        ws_address = 'ws://localhost:7654'
+        port = random.Random.randint(7000, 8000)
+        ws_address = f"ws://localhost:{port}"
+        self.robocode_manager: DockerManager = DockerManager(port_number=port)
 
         # start up the robocode server.
         self.robocode_manager.start()
