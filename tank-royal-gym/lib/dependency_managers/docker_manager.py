@@ -18,7 +18,7 @@ class DockerManager(RobocodeManager):
         self.robocode_image = 'gcr.io/stobias-dev/tank-royal-server:latest'
         self.container = None
         self.conn_pw = conn_pw
-        self.container_name = 'tank-royal-server'
+        self.container_name = f"tank-royal-server-{port_number}"
 
     # docker run -it --net=host -d --name robocode stobias123/robocode
     def start(self):
