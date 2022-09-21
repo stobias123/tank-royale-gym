@@ -4,7 +4,7 @@ from gym.vector.utils import spaces
 from tank_royal_manager.manager.bot_manager import BaseBotMessageHandler
 from tank_royal_manager.robocode_event_models import BotIntent
 
-import constants
+import lib.bot_api.constants as constants
 
 
 class BasicBot:
