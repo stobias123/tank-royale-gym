@@ -13,8 +13,8 @@ class BasicBot:
         self.botManager: BaseBotMessageHandler = None
         # self.botManager.start_thread()
         self.bots: List[ScannedBotEvent] = []
-        self.bot_state: BotState = BotState()
-        self.last_tick = TickEventForBot()
+        self.bot_state: BotState = None
+        self.last_tick: TickEventForBot = None
         self.last_frame = None
         self.action_space = spaces.Discrete(5)
 
