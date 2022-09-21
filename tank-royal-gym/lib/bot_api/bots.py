@@ -6,7 +6,7 @@ from gym import spaces
 from tank_royal_manager.manager.bot_manager import BaseBotMessageHandler
 from tank_royal_manager.robocode_event_models import TickEventForBot, BotIntent, ScannedBotEvent, BotState, MessageType
 
-from base_bot import BasicBot
+from lib.bot_api.base_bot import BasicBot
 
 
 class CustomBotManager(BaseBotMessageHandler):
