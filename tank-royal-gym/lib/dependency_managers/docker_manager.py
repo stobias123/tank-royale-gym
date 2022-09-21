@@ -6,7 +6,7 @@ import docker
 from docker import errors
 from tank_royal_manager.manager import ControllerManager
 
-from lib.dependency_managers.robocode_manager import RobocodeManager
+from robocode_manager import RobocodeManager
 
 class DockerManager(RobocodeManager):
     """

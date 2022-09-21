@@ -29,6 +29,7 @@ class BaseRobocodeEnv(gym.Env):
 
     def step(self, action):
         # Send our action
+        pass
 
     def _get_reward(self):
       pass
