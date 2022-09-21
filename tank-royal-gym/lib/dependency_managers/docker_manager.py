@@ -33,7 +33,7 @@ class DockerManager(RobocodeManager):
                                                                    detach=True,
                                                                    auto_remove=True,
                                                                    ports={
-                                                                       7654: self.port_number
+                                                                       self.port_number: self.port_number
                                                                    },
                                                                    command=['-C', self.conn_pw, '-p', str(self.port_number)]
                                                                    )
