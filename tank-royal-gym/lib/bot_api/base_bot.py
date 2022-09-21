@@ -33,7 +33,7 @@ class BasicBot:
             self.botManager.intent = BotIntent(turnRate=-1 * constants.MAX_TURN_RATE)
         # Space
         elif action == 4:
-            self.botManager.intent = BotIntent(firepower=5)
+            self.botManager.intent = BotIntent(firepower=3)
 
     def normalize_relative_angle(self, angle: float):
         angle %= 360
@@ -61,7 +61,7 @@ class BasicBot:
 
     ## find_bots iterates through the tick.events dictionary, and if the dictionary item is of type MessageType.ScannedBotEvent, it adds it to self.bots
     def find_bots(self, tick: TickEventForBot):
-        self.bots = []
+        self.bots = {}
         for event in tick.events:
             if 'type' in event:
                 if event['type'] == MessageType.ScannedBotEvent:

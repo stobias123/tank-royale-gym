@@ -69,7 +69,7 @@ class DockerRobocodeEnv(gym.Env):
                     total_reward += self.hit_penalty
                 if (event['type'] == MessageType.BotDeathEvent):
                     total_reward += self.dealth_penalty
-                if (event['type'] == MessageType.BulletHitEvent):
+                if (event['type'] == MessageType.BulletHitBotEvent):
                     total_reward += self.bullet_hit_reward
         return total_reward
 
@@ -78,7 +78,7 @@ class DockerRobocodeEnv(gym.Env):
 
     def reset(self):
         self.robocode_manager.reset()
-        sleep(2)
+        sleep(5)
         self.controller.game_over = False
         ## step to get 1 obs
         obs, reward, done, info = self.step(0)
