@@ -14,5 +14,8 @@ COPY ./requirements.txt /src/requirements.txt
 RUN cd /src/ && pip install -r requirements.txt
 
 RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libgl1 \
+        libglib2.0-0
 
 COPY . /app/
