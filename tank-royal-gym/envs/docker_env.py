@@ -13,6 +13,7 @@ from tank_royal_manager.robocode_event_models import TickEventForObserver, TickE
 from lib.bot_api.bots import DriveAndScanBot, FireBot, BasicBot, AgentBot
 from lib.dependency_managers.docker_manager import DockerManager
 from lib.render.basic_rgb import BasicRGB
+import random
 
 
 class DockerRobocodeEnv(gym.Env):
@@ -30,7 +31,7 @@ class DockerRobocodeEnv(gym.Env):
         self.action_space = spaces.Discrete(16)
         self.observation_space = spaces.Box(low=0, high=255,
                                             shape=(self.HEIGHT, self.WIDTH, 3), dtype=numpy.uint8)
-        port = random.Random.randint(7000, 8000)
+        port = random.randint(7000, 8000)
         ws_address = f"ws://localhost:{port}"
         self.robocode_manager: DockerManager = DockerManager(port_number=port)
 
