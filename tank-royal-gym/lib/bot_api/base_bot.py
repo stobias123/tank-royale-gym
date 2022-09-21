@@ -3,7 +3,7 @@ from typing import List
 
 from gym.vector.utils import spaces
 from tank_royal_manager.manager.bot_manager import BaseBotMessageHandler
-from tank_royal_manager.robocode_event_models import BotIntent, ScannedBotEvent, TickEventForBot, BotState
+from tank_royal_manager.robocode_event_models import BotIntent, ScannedBotEvent, TickEventForBot, BotState, MessageType
 
 import lib.bot_api.constants as constants
 
@@ -12,7 +12,7 @@ class BasicBot:
     def __init__(self, ws_address: str = 'ws://localhost:7654', bot_name: str = 'baseBot'):
         self.botManager: BaseBotMessageHandler = None
         # self.botManager.start_thread()
-        self.bots: List[ScannedBotEvent] = []
+        self.bots: {}
         self.bot_state: BotState = None
         self.last_tick: TickEventForBot = None
         self.last_frame = None
@@ -64,8 +64,9 @@ class BasicBot:
         self.bots = []
         for event in tick.events:
             if 'type' in event:
-                if event['type'] == 'ScannedBotEvent':
-                    self.bots.append(event)
+                if event['type'] == MessageType.ScannedBotEvent:
+                    event = ScannedBotEvent(**event)
+                    self.bots[event.scannedBotId] = event
 
     ## get_self_info gets the bot's state from the tick event and stores it in self.bot_stateo
     def get_self_info(self, tick: TickEventForBot):
