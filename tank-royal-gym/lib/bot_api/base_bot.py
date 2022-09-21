@@ -1,8 +1,9 @@
 import math
+from typing import List
 
 from gym.vector.utils import spaces
 from tank_royal_manager.manager.bot_manager import BaseBotMessageHandler
-from tank_royal_manager.robocode_event_models import BotIntent
+from tank_royal_manager.robocode_event_models import BotIntent, ScannedBotEvent, TickEventForBot, BotState
 
 import lib.bot_api.constants as constants
 
@@ -11,7 +12,9 @@ class BasicBot:
     def __init__(self, ws_address: str = 'ws://localhost:7654', bot_name: str = 'baseBot'):
         self.botManager: BaseBotMessageHandler = None
         # self.botManager.start_thread()
-        self.last_tick = None
+        self.bots: List[ScannedBotEvent] = []
+        self.bot_state: BotState = BotState()
+        self.last_tick = TickEventForBot()
         self.last_frame = None
         self.action_space = spaces.Discrete(5)
 
@@ -54,6 +57,19 @@ class BasicBot:
 
     def bearing_to(self, x: float, y: float):
         return int(self.normalize_absolute_angle(self.direction_to(x, y) - self.botManager.bot_state.direction))
+
+
+    ## find_bots iterates through the tick.events dictionary, and if the dictionary item is of type MessageType.ScannedBotEvent, it adds it to self.bots
+    def find_bots(self, tick: TickEventForBot):
+        self.bots = []
+        for event in tick.events:
+            if 'type' in event:
+                if event['type'] == 'ScannedBotEvent':
+                    self.bots.append(event)
+
+    ## get_self_info gets the bot's state from the tick event and stores it in self.bot_stateo
+    def get_self_info(self, tick: TickEventForBot):
+        self.bot_state = tick.botState
 
     # def turnToFaceTarget(self, x, y):
     #     bearing = self.bearing_to(x, y)
