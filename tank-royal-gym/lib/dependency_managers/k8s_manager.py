@@ -3,11 +3,11 @@ import os
 from random import randint
 import time
 from kubernetes import client, config, watch
-from robocode_manager import RobocodeManager
+from .robocode_manager import RobocodeManager
 
 
 class K8sManager(RobocodeManager):
-    def __init__(self,  namespace: str, port_number=7654, robocode_image: str = 'gcr.io/stobias-dev/tank-royal-server:0.17.1'):
+    def __init__(self,  namespace: str = "robocode", port_number=7654, robocode_image: str = 'gcr.io/stobias-dev/tank-royal-server:latest'):
         super().__init__(port_number=port_number, robocode_image=robocode_image)
         print("loading in cluster config")
         if os.environ.get('KUBECONFIG') == None:
@@ -15,6 +15,7 @@ class K8sManager(RobocodeManager):
         else:
             config.load_config()
         self.v1_client = client.CoreV1Api()
+        self.conn_pw = 'abc123'
         self.namespace = namespace
         self.port_number = port_number
         self.ip = None
@@ -36,9 +37,9 @@ class K8sManager(RobocodeManager):
             image_pull_policy='Always',
             ports=[client.V1ContainerPort(
                 container_port=self.port_number
-            )]
+            )],
             # args=[],
-            # command=["python3", "-u", "./shuffler.py"],
+            args=['-C', self.conn_pw, '-p', str(self.port_number)]
         )
         pod = client.V1Pod(
             spec=client.V1PodSpec(
