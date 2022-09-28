@@ -5,6 +5,7 @@ from time import sleep
 
 import gym
 import tank_royal_manager.manager.game_types
+from PIL import Image
 from gym import spaces
 import numpy
 from tank_royal_manager.manager.controller_manager import ControllerManager
@@ -14,6 +15,7 @@ from lib.bot_api.bots import DriveAndScanBot, FireBot, BasicBot, AgentBot
 from lib.dependency_managers.docker_manager import DockerManager
 from lib.render.basic_rgb import BasicRGB
 import random
+import torch
 
 
 class DockerRobocodeEnv(gym.Env):
@@ -56,7 +58,9 @@ class DockerRobocodeEnv(gym.Env):
         self.bullet_hit_reward = 0.1
 
     def _get_frame(self):
+        #return self.renderer.draw_tick(tick_event=self.bot_agent.last_tick, bots=self.bot_agent.bots)
         return self.renderer.draw_tick(tick_event=self.bot_agent.last_tick, bots=self.bot_agent.bots)
+
 
     def _get_reward(self, prev_state: TickEventForBot, next_state: TickEventForBot) -> float:
         total_reward = 0.0
@@ -78,7 +82,7 @@ class DockerRobocodeEnv(gym.Env):
 
     def reset(self):
         self.robocode_manager.reset()
-        sleep(5)
+        sleep(10)
         self.controller.game_over = False
         ## step to get 1 obs
         obs, reward, done, info = self.step(0)
