@@ -18,7 +18,6 @@ from envs.docker_env import DockerRobocodeEnv
 env = gym.make('DockerRobocodeEnv-v0')
 sleep(1)
 use_cuda = torch.cuda.is_available()
-print(f"Using CUDA: {use_cuda}")
 print()
 
 save_dir = Path("checkpoints") / datetime.now().strftime("%Y-%m-%dT%H-%M-%S")

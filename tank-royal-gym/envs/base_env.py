@@ -18,7 +18,7 @@ import random
 import torch
 
 
-class DockerRobocodeEnv(gym.Env):
+class BaseRobocodeEnv(gym.Env):
     metadata = {'render.modes': ['rgb_array']}
 
     def __init__(self):
@@ -33,21 +33,15 @@ class DockerRobocodeEnv(gym.Env):
         self.action_space = spaces.Discrete(16)
         self.observation_space = spaces.Box(low=0, high=255,
                                             shape=(self.HEIGHT, self.WIDTH, 3), dtype=numpy.uint8)
-        port = random.randint(7000, 8000)
-        ws_address = f"ws://localhost:{port}"
-        self.robocode_manager: DockerManager = DockerManager(port_number=port)
+        self.port = random.randint(7000, 8000)
+        self.ws_address = f"ws://localhost:{self.port}"
 
         # start up the robocode server.
         self.robocode_manager.start()
 
         # Set up the controller
-        self.controller = ControllerManager(ws_address)
+        self.controller = ControllerManager(self.ws_address)
         self.controller.start_thread()
-
-        # Start up our bot agent
-        self.bot_agent = AgentBot(ws_address)
-        self.enemy_agent = FireBot(ws_address)
-
         # Renderer
         self.renderer = BasicRGB(map_height=self.HEIGHT, map_width=self.WIDTH)
 
