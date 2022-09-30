@@ -8,9 +8,21 @@ gym.envs.register(
     max_episode_steps=1000,
 )
 
-
 gym.envs.register(
     id='KubernetesRobocodeEnv-v0',
     entry_point='envs.kubernetes_env:KubernetesRobocodeEnv',
+    max_episode_steps=1000,
+)
+
+gym.envs.register(
+    id='HalfSampleEnv-v0',
+    entry_point='envs.half_size_env:HalfSizeEnv',
+    max_episode_steps=1000,
+)
+
+
+gym.envs.register(
+    id='BooterEnv-v0',
+    entry_point='envs.booter_env:BooterEnv',
     max_episode_steps=1000,
 )

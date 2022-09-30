@@ -33,15 +33,7 @@ class BaseRobocodeEnv(gym.Env):
         self.action_space = spaces.Discrete(16)
         self.observation_space = spaces.Box(low=0, high=255,
                                             shape=(self.HEIGHT, self.WIDTH, 3), dtype=numpy.uint8)
-        self.port = random.randint(7000, 8000)
-        self.ws_address = f"ws://localhost:{self.port}"
 
-        # start up the robocode server.
-        self.robocode_manager.start()
-
-        # Set up the controller
-        self.controller = ControllerManager(self.ws_address)
-        self.controller.start_thread()
         # Renderer
         self.renderer = BasicRGB(map_height=self.HEIGHT, map_width=self.WIDTH)
 
@@ -53,7 +45,7 @@ class BaseRobocodeEnv(gym.Env):
 
     def _get_frame(self):
         #return self.renderer.draw_tick(tick_event=self.bot_agent.last_tick, bots=self.bot_agent.bots)
-        return self.renderer.draw_tick(tick_event=self.bot_agent.last_tick, bots=self.bot_agent.bots)
+        return self.renderer.draw_tick(tick_event=self.bot_agent.last_tick, bots=self.bot_agent.botManager.bots)
 
 
     def _get_reward(self, prev_state: TickEventForBot, next_state: TickEventForBot) -> float:

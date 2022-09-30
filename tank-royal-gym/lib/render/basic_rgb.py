@@ -38,8 +38,10 @@ class BasicRGB:
         img = np.zeros(img_shape, np.uint8)
         if tick_event is not None:
             img = self.draw_self(img, tick_event.botState)
-            for idx, bot in bots.items():
-                img = self.draw_scanned_bot(img, bot)
-            for bullet in tick_event.bulletStates:
-                img = self.draw_scanned_bullet(img, bullet)
+            if len(bots) > 0:
+                for idx, bot in bots.items():
+                    img = self.draw_scanned_bot(img, bot)
+            if len(tick_event.bulletStates) > 0:
+                for bullet in tick_event.bulletStates:
+                    img = self.draw_scanned_bullet(img, bullet)
         return img
