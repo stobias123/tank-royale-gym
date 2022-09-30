@@ -25,10 +25,10 @@ class BooterEnv(BaseRobocodeEnv):
         time.sleep(2)
         self.bot_agent = AgentBot(self.ws_address)
         self.bot_connection_addr=f"ws://192.168.1.16:{self.port}"
-        self.enemy_agent = BooterAgent(self.ws_address, ws_address=self.bot_connection_addr)
+        self.enemy_agent = BooterAgent(self.ws_address, ws_address=self.bot_connection_addr, port=self.port)
 
-        self.HEIGHT = 300
-        self.WIDTH = 400
+        self.HEIGHT: int = 600
+        self.WIDTH: int = 800
 
         super().__init__()
 
@@ -36,17 +36,19 @@ class BooterEnv(BaseRobocodeEnv):
         self.controller = ControllerManager(self.ws_address)
         self.controller.start_thread()
     def reset(self):
-        super().reset()
+        obs = super().reset()
         self.enemy_agent.reset()
+        return obs
 
 
 class BooterAgent(BasicBot):
-    def __init__(self, conn_pw: str, ws_address: str = 'ws://localhost:7654'):
+    def __init__(self, conn_pw: str, ws_address: str = 'ws://localhost:7654', port: int = '7654'):
         self.booter_image = 'gcr.io/stobias-dev/tank-royal-booter:latest'
         self.container = None
         self.conn_pw = conn_pw
         self.docker_client = docker.from_env()
-        self.container_name = f"tank-royal-booter-{random.randint(0, 100000)}"
+        self.port = port
+        self.container_name = f"tank-royal-booter-{self.port}"
         try:
             self.container = self.docker_client.containers.get(self.container_name)
             self.container.restart()
