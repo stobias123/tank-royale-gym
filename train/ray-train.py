@@ -20,8 +20,8 @@ from wrappers import SkipFrame, GrayScaleObservation, ResizeObservation
 
 # noinspection PyPackageRequirements
 def env_creator(env_config):
-    from envs.docker_env import DockerRobocodeEnv
-    env = gym.make('DockerRobocodeEnv-v0')  # return an env instance
+    from envs.booter_env import BooterEnv
+    env = gym.make('BooterEnv-v0')  # return an env instance
     env = GrayScaleObservation(env)
     env = ResizeObservation(env, shape=[240,320])
     return env
@@ -44,12 +44,12 @@ class MyCallbacks(DefaultCallbacks):
         episode.custom_metrics["pole_angle"] = pole_angle
         episode.hist_data["pole_angles"] = episode.user_data["pole_angles"]
 
-register_env("DockerRobocodeEnv-v0", env_creator)
+register_env("BooterEnv-v0", env_creator)
 
 # Configure the algorithm.
 config = {
     # Environment (RLlib understands openAI gym registered strings).
-    "env": "DockerRobocodeEnv-v0",
+    "env": "BooterEnv-v0",
     # Use 2 environment workers (aka "rollout workers") that parallelly
     # collect samples from their own environment clone(s).
     "num_workers": 4,
