@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "tank-royal-gym"
+name = "tank_royal_gym"
 version = "0.0.1"
 authors = [
   { name="Steven", email="noway@mail.com" },
@@ -22,7 +22,7 @@ classifiers = [
 "Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
 
 [tool.setuptools.packages.find]
-where = ["tank-royal-gym"]  # list of folders that contain the packages (["."] by default)
+where = ["tank_royal_gym"]  # list of folders that contain the packages (["."] by default)
 include = ["*"]  # package names should match these glob patterns (["*"] by default)
 exclude = ["test"]  # exclude packages matching these glob patterns (empty by default)
 namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
