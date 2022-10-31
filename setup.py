@@ -4,7 +4,7 @@ setup(
     name='tank_royal_gym',
     version='',
     packages=['lib', 'lib.render', 'lib.bot_api', 'lib.dependency_managers', 'envs', 'test'],
-    package_dir={'': 'tank-royal-gym'},
+    package_dir={'': 'tank_royal_gym'},
     url='',
     license='',
     author='steven.tobias',
