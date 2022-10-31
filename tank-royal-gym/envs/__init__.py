@@ -26,3 +26,9 @@ gym.envs.register(
     entry_point='envs.booter_env:BooterEnv',
     max_episode_steps=1000,
 )
+
+gym.envs.register(
+    id='BooterLiteEnv-v0',
+    entry_point='envs.booter_env_lite:BooterLiteEnv',
+    max_episode_steps=1000,
+)

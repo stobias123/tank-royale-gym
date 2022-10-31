@@ -7,7 +7,7 @@ from .robocode_manager import RobocodeManager
 
 
 class K8sManager(RobocodeManager):
-    def __init__(self,  namespace: str = "robocode", port_number=7654, robocode_image: str = 'gcr.io/stobias-dev/tank-royal-server:latest'):
+    def __init__(self,  namespace: str = "robocode", port_number=7654, robocode_image: str = 'gcr.io/stobias-dev/tank-royal-server:0.17.6'):
         super().__init__(port_number=port_number, robocode_image=robocode_image)
         print("loading in cluster config")
         if os.environ.get('KUBECONFIG') == None:
@@ -20,7 +20,7 @@ class K8sManager(RobocodeManager):
         self.port_number = port_number
         self.ip = None
         self.pod_name = f"robocode-training-{randint(1,10000)}"
-        self.pod_labels = {"app": self.pod_name}
+        self.pod_labels = {"app": "robocode", "instance": self.pod_name}
 
     # docker run -it --net=host -d --name robocode stobias123/robocode
     def start(self):
@@ -29,11 +29,11 @@ class K8sManager(RobocodeManager):
         time.sleep(5)
         logging.info(f"[Tank Royale] Started Robocode on port {self.port_number}")
 
-    def create_robocode_game(self):
+    def create_robocode_game(self, name: str ="train"):
         metadata = client.V1ObjectMeta(generate_name=self.pod_name, labels=self.pod_labels)
         container = client.V1Container(
             image=self.robocode_image,
-            name="train",
+            name=name,
             image_pull_policy='Always',
             ports=[client.V1ContainerPort(
                 container_port=self.port_number
@@ -49,12 +49,12 @@ class K8sManager(RobocodeManager):
             metadata=client.V1ObjectMeta(name=self.pod_name, labels=self.pod_labels),
         )
         pod = self.v1_client.create_namespaced_pod(namespace=self.namespace, body=pod)
-        pod_list = self.v1_client.list_namespaced_pod(label_selector=f"app={self.pod_name}",
+        pod_list = self.v1_client.list_namespaced_pod(label_selector=f"instance={self.pod_name}",
                                                           namespace=self.namespace)
         pod = pod_list.items[0]
         while pod.status.pod_ip == None:
             logging.info(f"[Tank Royale] Checking for pod.")
-            pod = self.v1_client.list_namespaced_pod(label_selector=f"app={self.pod_name}",
+            pod = self.v1_client.list_namespaced_pod(label_selector=f"instance={self.pod_name}",
                                                           namespace=self.namespace).items[0]
             time.sleep(1)
         logging.info(f"[Tank Royale] Started Robocode at IP {pod.status.pod_ip}")

@@ -24,7 +24,7 @@ class BooterEnv(BaseRobocodeEnv):
 
         time.sleep(2)
         self.bot_agent = AgentBot(self.ws_address)
-        self.bot_connection_addr=f"ws://192.168.1.16:{self.port}"
+        self.bot_connection_addr=f"ws://10.245.28.134:{self.port}"
         self.enemy_agent = BooterAgent(self.ws_address, ws_address=self.bot_connection_addr, port=self.port)
 
         self.HEIGHT: int = 600
@@ -43,7 +43,7 @@ class BooterEnv(BaseRobocodeEnv):
 
 class BooterAgent(BasicBot):
     def __init__(self, conn_pw: str, ws_address: str = 'ws://localhost:7654', port: int = '7654'):
-        self.booter_image = 'gcr.io/stobias-dev/tank-royal-booter:latest'
+        self.booter_image = 'gcr.io/stobias-dev/tank-royal-booter:0.17.4'
         self.container = None
         self.conn_pw = conn_pw
         self.docker_client = docker.from_env()

@@ -28,7 +28,10 @@ class BaseRobocodeEnv(gym.Env):
         # Env Setup - WASD to integer.
         self.HEIGHT: int = 600
         self.WIDTH: int = 800
+        self.STEP_LIMIT = 100000
+        self.ROUND_LIMIT = 1000
         self.step_count = 0
+        self.round_count = 0
         self.prev_state = None
         self.action_space = spaces.Discrete(16)
         self.observation_space = spaces.Box(low=0, high=255,
@@ -64,13 +67,17 @@ class BaseRobocodeEnv(gym.Env):
         return total_reward
 
     def _is_done(self):
+        if self.step_count > self.STEP_LIMIT:
+            return True
+        if self.round_count > self.ROUND_LIMIT:
+            return True
+        if self.controller.game_over == True:
+            return self.controller.game_over
         return self.controller.game_over
 
     def reset(self):
-        self.robocode_manager.reset()
-        sleep(10)
-        self.controller.game_over = False
         ## step to get 1 obs
+        self.controller.reset_turn = True
         obs, reward, done, info = self.step(0)
         return obs
 

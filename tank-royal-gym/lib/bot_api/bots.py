@@ -4,7 +4,8 @@ from typing import List
 
 from gym import spaces
 from tank_royal_manager.manager.bot_manager import BaseBotMessageHandler
-from tank_royal_manager.robocode_event_models import TickEventForBot, BotIntent, ScannedBotEvent, BotState, MessageType
+from tank_royal_manager.robocode_event_models import TickEventForBot, BotIntent, ScannedBotEvent, BotState, MessageType, \
+    GameEndedEventForBot
 
 from lib.bot_api.base_bot import BasicBot
 
@@ -83,3 +84,6 @@ class AgentBot(BasicBot):
             self.botManager.conn.send(BotIntent().json)
             return
         self.botManager.conn.send(self.botManager.intent.json())
+
+    def handle_game_event(self, event: GameEndedEventForBot):
+        logging.info(f"[{self.bot_name}]  -- GameEnd Event -- \n \t {event}")
