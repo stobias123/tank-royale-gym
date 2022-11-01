@@ -42,9 +42,9 @@ class BooterLiteEnv(BaseRobocodeEnv):
         logging.warning("[BooterEnvLite] - Resetting")
         self.controller.game_over = False
         self.controller.reset_turn = True
-        #logging.warning("[BooterEnvLite] - Stopping")
-        #self.controller.stop()
-        #time.sleep(.05)
+        logging.warning("[BooterEnvLite] - Stopping")
+        self.controller.stop()
+        time.sleep(.05)
         logging.warning("[BooterEnvLite] - Ending Round")
         self.controller.end_round()
         time.sleep(.05)
@@ -108,7 +108,8 @@ class BooterLiteAgent(BasicBot):
         pod = client.V1Pod(
             spec=client.V1PodSpec(
                 restart_policy="Never",
-                containers=[container]
+                containers=[container],
+                set_hostname_as_fqdn=True
             ),
             metadata=client.V1ObjectMeta(name=self.pod_name, labels=self.pod_labels),
         )
