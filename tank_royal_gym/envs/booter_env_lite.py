@@ -3,6 +3,7 @@ import os
 import random
 import time
 import rel
+import websocket
 
 from tank_royal_manager.manager.controller_manager import ControllerManager
 
@@ -15,6 +16,7 @@ from lib.bot_api.bots import FireBot, AgentBot, CustomBotManager
 from lib.dependency_managers.docker_manager import DockerManager
 from lib.dependency_managers.k8s_manager import K8sManager
 from .base_env import BaseRobocodeEnv
+from gym import spaces
 
 
 class BooterLiteEnv(BaseRobocodeEnv):
@@ -31,6 +33,7 @@ class BooterLiteEnv(BaseRobocodeEnv):
 
         self.HEIGHT: int = 600
         self.WIDTH: int = 800
+        self.action_space = spaces.Discrete(5)
 
         super().__init__()
 
@@ -40,8 +43,8 @@ class BooterLiteEnv(BaseRobocodeEnv):
 
     def reset(self):
         logging.warning("[BooterEnvLite] - Resetting")
-        self.controller.game_over = False
         self.controller.reset_turn = True
+
         logging.warning("[BooterEnvLite] - Stopping")
         self.controller.stop()
         time.sleep(.05)
@@ -51,6 +54,9 @@ class BooterLiteEnv(BaseRobocodeEnv):
         logging.warning("[BooterEnvLite] - Starting Round")
         self.controller.start()
         time.sleep(.05)
+
+        self.controller.reset_turn = False
+        self.controller.game_over = False
         obs = self.step(0)
         return obs[0]
 
@@ -89,6 +95,7 @@ class BooterLiteAgent(BasicBot):
         logging.info(f"[BooterLiteEnv] Started Robocode on port {self.port}")
 
     def create_booter_pod(self, name: str = "train"):
+        logging.info(f"[BooterLiteEnv] Creating pod {self.pod_name} for server {self.ws_address}")
         metadata = client.V1ObjectMeta(generate_name=self.pod_name, labels=self.pod_labels)
         container = client.V1Container(
             image=self.booter_image,

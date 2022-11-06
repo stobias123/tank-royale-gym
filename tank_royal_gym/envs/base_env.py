@@ -77,7 +77,6 @@ class BaseRobocodeEnv(gym.Env):
 
     def reset(self):
         ## step to get 1 obs
-        self.controller.reset_turn = True
         obs, reward, done, info = self.step(0)
         return obs
 

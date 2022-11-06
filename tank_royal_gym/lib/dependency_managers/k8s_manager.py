@@ -21,7 +21,7 @@ class K8sManager(RobocodeManager):
         self.namespace = namespace
         self.port_number = port_number
         self.ip = None
-        self.pod_name = f"robocode-training-{randint(1, 10000)}"
+        self.pod_name = f"robocode-training-{self.port_number}-{randint(1, 10000)}"
         self.pod_labels = {"app": "robocode", "instance": self.pod_name}
 
     # docker run -it --net=host -d --name robocode stobias123/robocode
@@ -35,6 +35,7 @@ class K8sManager(RobocodeManager):
         self._create_server_pod()
         self._create_service()
         self._create_ingress()
+        return self.get_robocode_pod().status.pod_ip
 
     def get_robocode_pod(self):
         pod_list = self.v1_client.list_namespaced_pod(label_selector=f"instance={self.pod_name}",
