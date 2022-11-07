@@ -19,20 +19,22 @@ class BasicBot:
         self.action_space = spaces.Discrete(5)
 
     def action_to_intent(self, action: int):
-        # W
         if action == 0:
+            self.botManager.intent = BotIntent()
+        # W
+        if action == 1:
             self.botManager.intent = BotIntent(targetSpeed=constants.MAX_FORWARD_SPEED)
         # A
-        elif action == 1:
+        elif action == 2:
             self.botManager.intent = BotIntent(turnRate=constants.MAX_TURN_RATE)
         # S
-        elif action == 2:
+        elif action == 3:
             self.botManager.intent = BotIntent(targetSpeed=-1 * constants.MAX_FORWARD_SPEED)
         # D
-        elif action == 3:
+        elif action == 4:
             self.botManager.intent = BotIntent(turnRate=-1 * constants.MAX_TURN_RATE)
         # Space
-        elif action == 4:
+        elif action == 5:
             self.botManager.intent = BotIntent(firepower=3)
 
     def normalize_relative_angle(self, angle: float):

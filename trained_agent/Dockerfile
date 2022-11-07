@@ -1,5 +1,4 @@
-FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
-
+FROM ubuntu:22.04
 RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 python3.9 python3-pip git
 COPY requirements.txt requirements.txt
 
@@ -15,7 +14,7 @@ COPY setup.py setup.py
 COPY tank_royal_gym tank_royal_gym
 WORKDIR /app
 RUN pip3 install --force-reinstall .
-COPY train/sb3.py sb3.py
-COPY train/wrappers.py wrappers.py
+COPY torch/robocode-model.zip /app/models/robocode-model.zip
+COPY trained_agent/main.py /app/main.py
 ENTRYPOINT ["python"]
-CMD ["/app/sb3.py"]
+CMD ["/app/main.py"]

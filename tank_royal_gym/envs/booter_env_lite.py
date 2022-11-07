@@ -28,12 +28,13 @@ class BooterLiteEnv(BaseRobocodeEnv):
         # start up the robocode server.
         self.robocode_manager.start()
         self.server_url = f"ws://{self.robocode_manager.ip}:{self.port}"
+        logging.info(f"[BooterEnvLite] Init - Starting Robocode Server: {self.server_url}")
         self.bot_agent = AgentBot(ws_address=self.server_url)
         self.enemy_agent = BooterLiteAgent(conn_pw="abc123", ws_address=self.server_url, port=self.port)
 
         self.HEIGHT: int = 600
         self.WIDTH: int = 800
-        self.action_space = spaces.Discrete(5)
+        self.action_space = spaces.Discrete(6)
 
         super().__init__()
 

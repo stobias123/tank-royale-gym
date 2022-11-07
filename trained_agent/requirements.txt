@@ -1,0 +1,11 @@
+fastapi==0.82.0
+ujson==5.4.0
+uvicorn==0.18.3
+loguru==0.6.0
+stackprinter==0.2.8
+boto3==1.24.67
+pyjwt==2.4.0
+kubernetes
+cryptography==3.3.2
+sqlalchemy
+numpy
