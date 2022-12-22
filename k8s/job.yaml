@@ -1,0 +1,74 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: "robocode-training-"
+  namespace: service-mlflow
+  annotations:
+    iam.amazonaws.com/role: arn:aws:iam::168995956934:role/mlflow-svc-us-west-2
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 600
+  suspend: false
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccountName: train-mlflow
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: "Exists"
+          effect: NoSchedule
+      nodeSelector:
+        karpenter.k8s.aws/instance-gpu-count: "1"
+      containers:
+      - name: "robocode-training"
+        command:
+        - python
+        - sb3.py
+        - --timesteps
+        - "500000"
+        - --record-timesteps
+        - "2000"
+        #- --load-model
+        #- "robocode-model.zip"
+        image: gcr.io/stobias-dev/tank-royale-train:0.1.32
+        ## we must set the below to read corresponding vault secrets.
+        env:
+          - name: workspace
+            value: svc-us-west-2
+          - name: environment
+            value: svc
+          - name: DEPLOYABLE
+            value: train-mlflow
+          - name: SERVICE
+            value: service-multivehicledetection
+          - name: AWS_REGION
+            value: us-west-2
+          - name: AWS_WEB_IDENTITY_TOKEN_FILE
+            value: "/var/run/secrets/eks.amazonaws.com/serviceaccount/token"
+          - name: AWS_ROLE_ARN
+            value: "arn:aws:iam::168995956934:role/mlflow-svc-us-west-2"
+          - name: MLFLOW_TRACKING_URI
+            value: "https://mlflow.svc.bird.co"
+          #- name: AWS_SHARED_CREDENTIALS_FILE
+          #  value: "/root/.aws/config"
+
+        resources:
+          requests:
+            ephemeral-storage: 100Gi
+          limits:
+            ephemeral-storage: 100Gi
+        volumeMounts:
+        - mountPath: /tensorboard
+          name: tensorboard
+        - mountPath: /dev/shm
+          name: cache-volume
+      volumes:
+      - name: cache-volume
+        emptyDir:
+          medium: Memory
+          sizeLimit: 16Gi
+            #nvidia.com/gpu: 1 # requesting 1 GPU
+      - name: tensorboard
+        emptyDir:
+          sizeLimit: 50Gi
+      terminationGracePeriodSeconds: 30

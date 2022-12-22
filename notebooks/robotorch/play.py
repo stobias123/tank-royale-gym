@@ -3,23 +3,21 @@ import sys
 from datetime import datetime
 from pathlib import Path
 from time import sleep
+
+import gym
+import torch
 from gym.wrappers import FrameStack
-from agent import Agent
-from metrics import MetricLogger
-from wrappers import *
+
+from .agent import Agent
+from .metrics import MetricLogger
+from .wrappers import *
+
 from envs.docker_env import DockerRobocodeEnv
 
 # Apply Wrappers to environment
 env = gym.make('DockerRobocodeEnv-v0')
 sleep(1)
-env = SkipFrame(env, skip=4)
-env = GrayScaleObservation(env)
-env = ResizeObservation(env, shape=84)
-env = FrameStack(env, num_stack=4)
-state = env.reset()
-
 use_cuda = torch.cuda.is_available()
-print(f"Using CUDA: {use_cuda}")
 print()
 
 save_dir = Path("checkpoints") / datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
@@ -28,14 +26,9 @@ save_dir.mkdir(parents=True)
 mario = Agent(state_dim=(4, 84, 84), action_dim=env.action_space.n, save_dir=save_dir)
 
 logger = MetricLogger(save_dir)
-sleep(5)
 
-## Configure logging library to log to stdout and log level info
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-episodes = 1000
+episodes = 10
 for e in range(episodes):
-    logging.info("Episode: %d" % e)
-    print("Episode Start")
 
     state = env.reset()
 
@@ -65,9 +58,6 @@ for e in range(episodes):
             break
 
     logger.log_episode()
-    print("Episode Complete")
 
     if e % 20 == 0:
         logger.record(episode=e, epsilon=mario.exploration_rate, step=mario.curr_step)
-
-print("training complete")

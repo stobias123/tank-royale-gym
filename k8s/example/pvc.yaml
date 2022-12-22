@@ -1,0 +1,15 @@
+## Create a PVC
+# Path: pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tensorboard
+  namespace: service-mlflow
+spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+        requests:
+          storage: 100Gi
+    storageClassName: gp2
+    volumeMode: Filesystem

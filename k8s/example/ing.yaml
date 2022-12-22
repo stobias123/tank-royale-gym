@@ -1,0 +1,80 @@
+## This ingress defines a websocket frontend using nginx ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: robocode
+  namespace: robocode
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/upstream-keepalive-connections: "1000"
+    nginx.ingress.kubernetes.io/upstream-keepalive-timeout: "3600"
+    nginx.ingress.kubernetes.io/upstream-keepalive: "1000"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+spec:
+  ingressClassName: ingress-nginx-private
+  rules:
+  - host: robocode-7655.svc.bird.co
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: robocode
+            port:
+              number: 7655
+---
+# This service defines the service layer of the robocode app
+apiVersion: v1
+kind: Service
+metadata:
+  name: robocode
+  namespace: robocode
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 7655
+    targetPort: 7655
+    protocol: TCP
+  selector:
+    app: robocode
+    instance: robocode-training-7655
+---
+# This Pod manifest will turn on the gcr.io/stobias-dev/tank-royal-server:0.17.6 image
+# and expose it on port 7654
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kubernetes.io/psp: eks.privileged
+  labels:
+    app: robocode
+    instance: robocode-training-7655
+  name: robocode-training-7655
+  namespace: robocode
+spec:
+  containers:
+  - args:
+    - -C
+    - abc123
+    - -p
+    - "7655"
+    image: gcr.io/stobias-dev/tank-royal-server:0.17.6
+    imagePullPolicy: Always
+    name: train
+    ports:
+    - containerPort: 7655
+  hostname: robocode-training-7655
+  imagePullSecrets:
+  - name: gcr-secret
+  priority: 0
+  restartPolicy: Never
+  serviceAccountName: default
